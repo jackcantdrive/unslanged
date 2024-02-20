@@ -1,9 +1,9 @@
 
 type var = string 
 
-type oper = ADD | MUL | DIV | SUB
+type oper = ADD | MUL | DIV | SUB | MOD
 
-type unary_oper = NEG
+type unary_oper = NEG | FIB
 
 type expr = 
        | Integer of int

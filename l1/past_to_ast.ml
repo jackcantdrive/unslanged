@@ -6,12 +6,14 @@
 
 let translate_uop = function 
   | Past.NEG -> Ast.NEG 
+  | Past.FIB -> Ast.FIB
 
 let translate_bop = function 
   | Past.ADD -> Ast.ADD 
   | Past.MUL -> Ast.MUL
   | Past.DIV -> Ast.DIV
   | Past.SUB -> Ast.SUB
+  | Past.MOD -> Ast.MOD
 
 
 let rec translate_expr = function 

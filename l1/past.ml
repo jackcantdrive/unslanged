@@ -18,9 +18,9 @@ type type_expr =
 
 type formals = (var * type_expr) list
 
-type oper = ADD | MUL | DIV | SUB 
+type oper = ADD | MUL | DIV | SUB | MOD
 
-type unary_oper = NEG 
+type unary_oper = NEG | FIB
 
 type expr = 
        | Integer of loc * int
@@ -61,12 +61,14 @@ let rec pp_type = function
 
 let pp_uop = function 
   | NEG -> "-" 
+  | FIB -> "fib"
 
 let pp_bop = function 
   | ADD -> "+" 
   | MUL  -> "*" 
   | DIV  -> "/" 
   | SUB -> "-" 
+  | MOD -> "%" 
 
 let string_of_oper = pp_bop 
 let string_of_unary_oper = pp_uop 
@@ -98,12 +100,14 @@ let eprint_expr e =
 
 let string_of_uop = function 
   | NEG -> "NEG" 
+  | FIB -> "FIB"
 
 let string_of_bop = function 
   | ADD -> "ADD" 
   | MUL  -> "MUL" 
   | DIV  -> "DIV" 
   | SUB -> "SUB"
+  | MOD -> "MOD"
 
 let mk_con con l = 
     let rec aux carry = function 

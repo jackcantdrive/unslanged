@@ -21,8 +21,10 @@ let int_reg_exp = ['0'-'9']+
 	  | [' ' '\t']     { token lexbuf }     (* skip blanks *)
 	  | '+'            { ADD }
 	  | '-'            { SUB }
+	  | "fib"          { FIB }
 	  | '*'            { MUL }
 	  | '/'            { DIV }
+	  | '%'            { MOD }
 	  | '('            { LPAREN }
 	  | ')'            { RPAREN }
 	  | ';'	           { SEMICOLON }
