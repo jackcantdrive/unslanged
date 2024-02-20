@@ -1,0 +1,2 @@
+ocamlbuild -clean && ocamlbuild l1.byte
+./l1.byte tests/mod1.l1 -V
