@@ -32,6 +32,8 @@ simple_expr:
 
 expr:
 | simple_expr                        {  $1 }
+| UMINUS expr                           { Past.UnaryOp(get_loc(), Past.NEG, $2) }
+| FIB expr                           { Past.UnaryOp(get_loc(), Past.FIB, $2) }
 | expr ADD expr                      { Past.Op(get_loc(), $1, Past.ADD, $3) }
 | expr SUB expr                      { Past.Op(get_loc(), $1, Past.SUB, $3) }
 | expr MUL expr                      { Past.Op(get_loc(), $1, Past.MUL, $3) }

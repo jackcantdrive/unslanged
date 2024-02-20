@@ -45,6 +45,7 @@ let readint () = let _ = print_string "input> " in read_int()
 
 let do_unary = function 
   | (NEG,  INT m)  -> INT (-m)
+  | (FIB,  INT m)  -> INT (7337)
   | (op, _) -> complain ("malformed unary operator: " ^ (string_of_unary_oper op))
 
 let do_oper = function 
@@ -64,6 +65,7 @@ let rec interpret (e, env, store) =
 	| Integer n        -> (INT n, store) 
     | Op(e1, op, e2)   -> let (v1, store1) = interpret(e1, env, store) in 
                           let (v2, store2) = interpret(e2, env, store1) in (do_oper(op, v1, v2), store2) 
+    | UnaryOp(uop, e)   -> let (v, store1) = interpret(e, env, store) in (do_unary(uop, v), store1) 
     | Seq [e]          -> interpret (e, env, store)
     | Seq (e :: rest)  -> let (_,  store1) = interpret(e, env, store) 
                           in interpret(Seq rest, env, store1) 
