@@ -64,7 +64,10 @@ let rec interpret (e, env, store) =
     match e with 
 	| Integer n        -> (INT n, store) 
     | Op(e1, op, e2)   -> let (v1, store1) = interpret(e1, env, store) in 
-                          let (v2, store2) = interpret(e2, env, store1) in (do_oper(op, v1, v2), store2) 
+                          let (v2, store2) = interpret(e2, env, store1) in (do_oper(op, v1, v2), store2)
+    | UnaryOp(FIB, Integer n) when n < 2 -> (INT n, store)
+    | UnaryOp(FIB, Integer n) -> let (v1, store1) = interpret(UnaryOp(FIB, Integer (n-1)), env, store) in 
+          let (v2, store2) = interpret(UnaryOp(FIB, Integer (n-2)), env, store1) in (do_oper(ADD, v1, v2), store2)
     | UnaryOp(uop, e)   -> let (v, store1) = interpret(e, env, store) in (do_unary(uop, v), store1) 
     | Seq [e]          -> interpret (e, env, store)
     | Seq (e :: rest)  -> let (_,  store1) = interpret(e, env, store) 
