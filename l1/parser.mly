@@ -13,8 +13,9 @@ let get_loc = Parsing.symbol_start_pos
 %token LPAREN RPAREN
 %token BEGIN END
 %token EOF
+%left EQUAL
 %left ADD SUB        /* lowest precedence */
-%left EQUAL MUL DIV MOD         /* medium precedence */
+%left MUL DIV MOD         /* medium precedence */
 %nonassoc UMINUS FIB        /* highest precedence */
 %nonassoc IDENT
 
