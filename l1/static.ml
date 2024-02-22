@@ -69,12 +69,16 @@ let make_bop loc bop (e1, t1) (e2, t2) =
     | MOD, t,      _      -> report_expecting e1 "integer" t
 
 
+let make_assign loc var (e, t) = Assign(loc, var, e), TEunit
+
 let rec  infer env e = 
     match e with 
     | Integer _            -> (e, TEint)
     | UnaryOp(loc, uop, e) -> make_uop loc uop (infer env e) 
     | Op(loc, e1, bop, e2) -> make_bop loc bop (infer env e1) (infer env e2) 
-    | Seq(loc, el)         -> infer_seq loc env el 
+    | Seq(loc, el)         -> infer_seq loc env el
+    | Var(loc, var) -> e, find loc var env
+    | Assign(loc, var, e) -> make_assign loc var (infer env e)
 
 and infer_seq loc env el = 
     let rec aux carry = function 

@@ -7,13 +7,16 @@ let get_loc = Parsing.symbol_start_pos
 %}
 
 %token <int> INT
+%token<string> IDENT
+%token EQUAL
 %token ADD SUB MUL DIV SEMICOLON FIB MOD
 %token LPAREN RPAREN
 %token BEGIN END
 %token EOF
 %left ADD SUB        /* lowest precedence */
-%left MUL DIV MOD         /* medium precedence */
+%left EQUAL MUL DIV MOD         /* medium precedence */
 %nonassoc UMINUS FIB        /* highest precedence */
+%nonassoc IDENT
 
 
 %start main
@@ -28,6 +31,7 @@ main:
 ;
 simple_expr:
 | INT                                { Past.Integer (get_loc(), $1) }
+| IDENT                              { Past.Var (get_loc(), $1) }
 | LPAREN expr RPAREN                 { $2 }
 
 expr:
@@ -40,6 +44,7 @@ expr:
 | expr DIV expr                      { Past.Op(get_loc(), $1, Past.DIV, $3) }
 | expr MOD expr                      { Past.Op(get_loc(), $1, Past.MOD, $3) }
 | BEGIN exprlist END                 { Past.Seq(get_loc(), $2) }
+| IDENT EQUAL expr { Past.Assign(get_loc(), $1, $3) }
 
 exprlist:
 |   expr                             { [$1] }

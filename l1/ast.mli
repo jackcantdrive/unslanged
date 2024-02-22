@@ -10,6 +10,8 @@ type expr =
        | UnaryOp of unary_oper * expr
        | Op of expr * oper * expr
        | Seq of (expr list)
+       | Var of var
+       | Assign of var * expr
 
 (* printing *) 
 val string_of_unary_oper : unary_oper -> string 

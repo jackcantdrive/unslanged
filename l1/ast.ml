@@ -10,6 +10,8 @@ type expr =
        | UnaryOp of unary_oper * expr
        | Op of expr * oper * expr
        | Seq of (expr list)
+       | Var of var
+       | Assign of var * expr
 
 and lambda = var * expr 
 
@@ -50,6 +52,8 @@ let rec pp_expr ppf = function
     | Op(e1, op, e2)   -> fprintf ppf "(%a %a %a)" pp_expr e1  pp_binary op pp_expr e2 
 
     | Seq el           -> fprintf ppf "begin %a end" pp_expr_list el 
+    | Var var          -> fprintf ppf "%s" var
+    | Assign (var, e) -> fprintf ppf "begin %s = %a end" var pp_expr e
 	
 and pp_expr_list ppf = function 
   | [] -> () 
@@ -89,7 +93,9 @@ let rec string_of_expr = function
     | Integer n        -> mk_con "Integer" [string_of_int n] 
     | UnaryOp(op, e)   -> mk_con "UnaryOp" [string_of_uop op; string_of_expr e]
     | Op(e1, op, e2)   -> mk_con "Op" [string_of_expr e1; string_of_bop op; string_of_expr e2]
-    | Seq el           -> mk_con "Seq" [string_of_expr_list el] 
+    | Seq el           -> mk_con "Seq" [string_of_expr_list el]
+    | Var(var) -> mk_con "Var" [var]
+    | Assign(var, e) -> mk_con "Assign" [var; string_of_expr e]
 
 and string_of_expr_list = function 
   | [] -> "" 

@@ -21,3 +21,5 @@ let rec translate_expr = function
     | Past.UnaryOp(_, op, e) -> Ast.UnaryOp(translate_uop op, translate_expr e)
     | Past.Op(_, e1, op, e2) -> Ast.Op(translate_expr e1, translate_bop op, translate_expr e2)
     | Past.Seq(_, e1) -> Ast.Seq(List.map translate_expr e1)
+    | Past.Var(_, var) -> Ast.Var var
+    | Past.Assign(_, var, e) -> Ast.Assign(var, translate_expr e)
