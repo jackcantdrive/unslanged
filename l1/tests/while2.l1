@@ -1,11 +1,7 @@
-begin
-    x=3;
-    y = 1;
-    while x >= 0 do
-        begin
-            x = x - 1;
-            y = y * 2
-        end
-    end;
-    y
-end
+x=3;
+y = 1;
+while x >= 0 do
+    x = x - 1;
+    y = y * 2
+end;
+y

@@ -1,9 +1,7 @@
-begin
-    n = 10;
-    a = 0;
-    b = 1;
-    while --n >= 0 do
-        a = b | b = a + b
-    end;
-    a
-end
+n = 10;
+a = 0;
+b = 1;
+while --n >= 0 do
+    a = b | b = a + b
+end;
+a

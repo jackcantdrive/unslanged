@@ -1,5 +1,3 @@
-begin
-    foo=2;
-    bar = foo * 2;
-    bar
-end
+foo=2;
+bar = foo * 2;
+bar
