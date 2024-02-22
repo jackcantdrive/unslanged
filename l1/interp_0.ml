@@ -21,6 +21,7 @@ type var = string
 type address = int 
 and value = 
      | INT of int 
+     | BOOL of bool
      | UNIT
 
 type env = var -> value 
@@ -37,6 +38,7 @@ type store = binding list
 
 let rec string_of_value = function 
      | INT n -> string_of_int n 
+     | BOOL b -> string_of_bool b
      | UNIT -> "()"
     
 (* update : (env * binding) -> env 
@@ -57,6 +59,7 @@ let do_oper = function
   | (MUL,  INT m,   INT n)  -> INT (m * n)
   | (DIV,  INT m,   INT n)  -> INT (m / n)
   | (MOD,  INT m,   INT n)  -> INT (m mod n)
+  | (GTEQ,  INT m,   INT n)  -> BOOL (m >= n)
   | (op, _, _)  -> complain ("malformed binary operator: " ^ (string_of_oper op))
 
 (*

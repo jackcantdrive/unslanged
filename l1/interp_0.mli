@@ -4,6 +4,7 @@ type var = string
 
 and value = 
      | INT of int 
+     | BOOL of bool
      | UNIT
 
 type env = Ast.var -> value 
