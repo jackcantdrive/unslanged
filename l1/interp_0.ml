@@ -24,6 +24,7 @@ type store = address -> value
 
 and value = 
      | INT of int 
+     | UNIT
 
 type env = var -> value 
 
@@ -35,6 +36,7 @@ type bindings = binding list
 
 let rec string_of_value = function 
      | INT n -> string_of_int n 
+     | UNIT -> "()"
     
 (* update : (env * binding) -> env 
    update : (store * (address * value)) -> store
@@ -74,6 +76,9 @@ let rec interpret (e, env, store) =
     | Seq [e]          -> interpret (e, env, store)
     | Seq (e :: rest)  -> let (_,  store1) = interpret(e, env, store) 
                           in interpret(Seq rest, env, store1) 
+    | Var var -> (INT 7337, store)
+    | Assign(var, e) -> let (v1, store1) = interpret(e, env, store) in
+                              (UNIT, store)
 
 (* env_empty : env *) 
 let empty_env = fun x -> complain (x ^ " is not defined!\n")
