@@ -1,0 +1,11 @@
+begin
+    x = 1;
+    y = 2;
+
+    (* swap *)
+    y = x + y;
+    x = y - x;
+    y = y - x;
+
+    x * 1000000 + y
+end
