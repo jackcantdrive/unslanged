@@ -106,7 +106,7 @@ let rec interpret (e, env, store) =
                   | BOOL false -> UNIT, store1
                   | _ -> complain ("expected BOOL"))
     | Dec var -> match (find_var var store) with
-                  | INT n -> UNIT, (var, INT (n-1))::store
+                  | INT n -> INT (n-1), (var, INT (n-1))::store
                   | _ -> complain ("expected INT")
 
 (* env_empty : env *) 
