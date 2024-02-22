@@ -1,14 +1,10 @@
-begin
-    n = 10;
-    a = 0;
-    b = 1;
-    while n >= 1 do
-        begin
-        n = n - 1;
-        c = a + b;
-        a = b;
-        b = c
-        end
-    end;
-    a
-end
+n = 10;
+a = 0;
+b = 1;
+while n >= 1 do
+    n = n - 1;
+    c = a + b;
+    a = b;
+    b = c
+end;
+a
