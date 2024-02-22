@@ -29,6 +29,7 @@ type expr =
   | Seq of loc * (expr list)
   | Var of loc * var
   | Assign of loc * var * expr
+  | Para of loc * expr * expr
 
 
 and lambda = var * type_expr * expr 
@@ -40,6 +41,7 @@ let loc_of_expr = function
     | Seq(loc, _)                   -> loc
     | Var(loc, _) -> loc
     | Assign(loc, _, _) -> loc
+    | Para(loc, _, _) -> loc
 
 
 let string_of_loc loc = 
@@ -136,6 +138,7 @@ let rec string_of_expr = function
     | Seq (_, el)         -> mk_con "Seq" [string_of_expr_list el]
     | Var(_, var) -> mk_con "Var" [var]
     | Assign(_, var, e) -> mk_con "Assign" [var; string_of_expr e]
+    | Para(_, e1, e2) -> mk_con "Bar" [string_of_expr e1; string_of_expr e2]
 
 
 and string_of_expr_list = function 

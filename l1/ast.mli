@@ -12,6 +12,7 @@ type expr =
        | Seq of (expr list)
        | Var of var
        | Assign of var * expr
+       | Para of expr * expr
 
 (* printing *) 
 val string_of_unary_oper : unary_oper -> string 

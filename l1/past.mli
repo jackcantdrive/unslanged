@@ -25,6 +25,7 @@ type expr =
     | Seq of loc * (expr list)
     | Var of loc * var
     | Assign of loc * var * expr
+    | Para of loc * expr * expr
 
 val loc_of_expr : expr -> loc 
 val string_of_loc : loc -> string 

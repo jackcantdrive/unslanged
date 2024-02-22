@@ -69,6 +69,10 @@ let rec find_var var = function
   | _::rest -> find_var var rest
   | [] -> complain (var ^ " is not defined!\n")
 
+let rec take n list = match (n, list) with
+  | 0, _ -> [] | _, [] -> []
+  | n, hd::rest -> hd::take (n-1) rest
+
 let rec interpret (e, env, store) = 
     match e with 
 	| Integer n        -> (INT n, store) 
@@ -86,6 +90,10 @@ let rec interpret (e, env, store) =
     | Var var -> (find_var var store, store)
     | Assign(var, e) -> let (v1, store1) = interpret(e, env, store) in
                               (UNIT, (var, v1)::store)
+    | Para(e1, e2) -> let (v1, store1) = interpret(e1, env, store) in
+                        let (v2, store2) = interpret(e2, env, store) in
+                        let num_new = List.length store2 - List.length store in 
+                        (UNIT, take num_new store2 @ store1)
 
 (* env_empty : env *) 
 let empty_env = fun x -> complain (x ^ " is not defined!\n")

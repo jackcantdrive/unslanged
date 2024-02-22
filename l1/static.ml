@@ -79,6 +79,7 @@ let rec infer env e =
     | Seq(loc, el)         -> infer_seq loc env el
     | Var(loc, var) -> e, TEint (* find loc var env *)
     | Assign(loc, var, e) -> make_assign loc var (infer env e)
+    | Para(loc, e1, e2) -> Para(loc, e1, e2), TEunit
 
 and infer_seq loc env el = 
     let rec aux carry = function 

@@ -13,6 +13,8 @@ let get_loc = Parsing.symbol_start_pos
 %token LPAREN RPAREN
 %token BEGIN END
 %token EOF
+%token BAR
+%left BAR
 %left EQUAL
 %left ADD SUB        /* lowest precedence */
 %left MUL DIV MOD         /* medium precedence */
@@ -46,6 +48,7 @@ expr:
 | expr MOD expr                      { Past.Op(get_loc(), $1, Past.MOD, $3) }
 | BEGIN exprlist END                 { Past.Seq(get_loc(), $2) }
 | IDENT EQUAL expr { Past.Assign(get_loc(), $1, $3) }
+| expr BAR expr { Past.Para(get_loc(), $1, $3) }
 
 exprlist:
 |   expr                             { [$1] }

@@ -23,3 +23,4 @@ let rec translate_expr = function
     | Past.Seq(_, e1) -> Ast.Seq(List.map translate_expr e1)
     | Past.Var(_, var) -> Ast.Var var
     | Past.Assign(_, var, e) -> Ast.Assign(var, translate_expr e)
+    | Past.Para(_, e1, e2) -> Ast.Para(translate_expr e1, translate_expr e2)
