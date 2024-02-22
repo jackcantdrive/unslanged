@@ -18,7 +18,7 @@ type type_expr =
 
 type formals = (var * type_expr) list
 
-type oper = ADD | MUL | DIV | SUB | MOD
+type oper = ADD | MUL | DIV | SUB | MOD | GTEQ
 
 type unary_oper = NEG | FIB
 
@@ -33,7 +33,6 @@ type expr =
   | Bool of loc * bool
   | While of loc * expr * expr
   | If of loc * expr * expr * expr
-  | Gteq of loc * expr * expr
 
 
 and lambda = var * type_expr * expr 
@@ -49,7 +48,6 @@ let loc_of_expr = function
     | Bool(loc, _) -> loc
     | While(loc, _, _) -> loc
     | If(loc, _, _, _) -> loc
-    | Gteq(loc, _, _) -> loc
 
 
 let string_of_loc loc = 
@@ -83,6 +81,7 @@ let pp_bop = function
   | DIV  -> "/" 
   | SUB -> "-" 
   | MOD -> "%" 
+  | GTEQ -> ">="
 
 let string_of_oper = pp_bop 
 let string_of_unary_oper = pp_uop 
@@ -122,6 +121,7 @@ let string_of_bop = function
   | DIV  -> "DIV" 
   | SUB -> "SUB"
   | MOD -> "MOD"
+  | GTEQ -> "GTEQ"
 
 let mk_con con l = 
     let rec aux carry = function 
@@ -150,7 +150,6 @@ let rec string_of_expr = function
     | Bool(_, b) -> mk_con "Bool" [string_of_bool b] 
     | If(_, e1, e2, e3) -> mk_con "If" [string_of_expr e1; string_of_expr e2; string_of_expr e3]
     | While(_, e1, e2) -> mk_con "While" [string_of_expr e1; string_of_expr e2]
-    | Gteq(_, e1, e2) -> mk_con "Gteq" [string_of_expr e1; string_of_expr e2]
 
 
 and string_of_expr_list = function 

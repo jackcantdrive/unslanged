@@ -1,7 +1,7 @@
 
 type var = string 
 
-type oper = ADD | MUL | DIV | SUB | MOD
+type oper = ADD | MUL | DIV | SUB | MOD | GTEQ
 
 type unary_oper = NEG | FIB
 
@@ -16,7 +16,6 @@ type expr =
        | If of expr * expr * expr
        | Bool of bool
        | While of expr * expr
-       | Gteq of expr * expr
 
 (* printing *) 
 val string_of_unary_oper : unary_oper -> string 

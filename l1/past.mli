@@ -14,7 +14,7 @@ type type_expr =
    | TEproduct of type_expr * type_expr
    | TEunion of type_expr * type_expr
 
-type oper = ADD | MUL | DIV | SUB | MOD
+type oper = ADD | MUL | DIV | SUB | MOD | GTEQ
 
 type unary_oper = NEG | FIB
 
@@ -29,7 +29,6 @@ type expr =
     | Bool of loc * bool
     | While of loc * expr * expr
     | If of loc * expr * expr * expr
-    | Gteq of loc * expr * expr
 
 val loc_of_expr : expr -> loc 
 val string_of_loc : loc -> string 

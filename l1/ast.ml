@@ -1,7 +1,7 @@
 
 type var = string 
 
-type oper = ADD | MUL | DIV | SUB | MOD
+type oper = ADD | MUL | DIV | SUB | MOD | GTEQ
 
 type unary_oper = NEG | FIB
 
@@ -16,7 +16,6 @@ type expr =
        | If of expr * expr * expr
        | Bool of bool
        | While of expr * expr
-       | Gteq of expr * expr
 
 and lambda = var * expr 
 
@@ -40,6 +39,7 @@ let pp_bop = function
   | DIV  -> "/" 
   | SUB -> "-" 
   | MOD -> "%" 
+  | GTEQ -> ">="
 
 
 let string_of_oper = pp_bop 
@@ -63,7 +63,6 @@ let rec pp_expr ppf = function
     | Bool b -> fstring ppf (string_of_bool b)
     | While (e1, e2) -> fprintf ppf "while %a do %a end" pp_expr e1 pp_expr e2
     | If (e1, e2, e3) -> fprintf ppf "if %a then %a else %a" pp_expr e1 pp_expr e2 pp_expr e3
-    | Gteq (e1, e2) -> fprintf ppf "%a >= %a" pp_expr e1 pp_expr e2
 	
 and pp_expr_list ppf = function 
   | [] -> () 
@@ -91,6 +90,7 @@ let string_of_bop = function
   | DIV  -> "DIV" 
   | SUB -> "SUB" 
   | MOD -> "MOD"
+  | GTEQ -> "GTEQ"
 
 let mk_con con l = 
     let rec aux carry = function 
@@ -109,7 +109,6 @@ let rec string_of_expr = function
     | Para (e1, e2)           -> mk_con "Para" [string_of_expr e1; string_of_expr e2]
     | If (e1, e2, e3)           -> mk_con "If" [string_of_expr e1; string_of_expr e2; string_of_expr e3]
     | While (e1, e2)           -> mk_con "While" [string_of_expr e1; string_of_expr e2]
-    | Gteq (e1, e2)           -> mk_con "Gteq" [string_of_expr e1; string_of_expr e2]
     | Bool b           -> mk_con "Bool" [string_of_bool b]
 
 and string_of_expr_list = function 

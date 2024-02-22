@@ -14,6 +14,7 @@ let translate_bop = function
   | Past.DIV -> Ast.DIV
   | Past.SUB -> Ast.SUB
   | Past.MOD -> Ast.MOD
+  | Past.GTEQ -> Ast.GTEQ
 
 
 let rec translate_expr = function 
@@ -26,5 +27,4 @@ let rec translate_expr = function
     | Past.Para(_, e1, e2) -> Ast.Para(translate_expr e1, translate_expr e2)
     | Past.If(_, e1, e2, e3) -> Ast.If(translate_expr e1, translate_expr e2, translate_expr e3)
     | Past.While(_, e1, e2) -> Ast.While(translate_expr e1, translate_expr e2)
-    | Past.Gteq(_, e1, e2) -> Ast.Gteq(translate_expr e1, translate_expr e2)
     | Past.Bool(_, b) -> Ast.Bool b
