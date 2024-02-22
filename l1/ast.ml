@@ -98,7 +98,7 @@ let rec string_of_expr = function
     | Seq el           -> mk_con "Seq" [string_of_expr_list el]
     | Var(var) -> mk_con "Var" [var]
     | Assign(var, e) -> mk_con "Assign" [var; string_of_expr e]
-    | Para (e1, e2)           -> mk_con "Bar" [string_of_expr e1; string_of_expr e1]
+    | Para (e1, e2)           -> mk_con "Para" [string_of_expr e1; string_of_expr e2]
 
 and string_of_expr_list = function 
   | [] -> "" 

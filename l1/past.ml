@@ -138,7 +138,7 @@ let rec string_of_expr = function
     | Seq (_, el)         -> mk_con "Seq" [string_of_expr_list el]
     | Var(_, var) -> mk_con "Var" [var]
     | Assign(_, var, e) -> mk_con "Assign" [var; string_of_expr e]
-    | Para(_, e1, e2) -> mk_con "Bar" [string_of_expr e1; string_of_expr e2]
+    | Para(_, e1, e2) -> mk_con "Para" [string_of_expr e1; string_of_expr e2]
 
 
 and string_of_expr_list = function 
