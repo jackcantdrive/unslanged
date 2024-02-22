@@ -1,0 +1,4 @@
+begin
+    foo=1;
+    foo
+end

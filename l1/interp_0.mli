@@ -1,12 +1,16 @@
 type address 
+type var = string
 
-type store = address -> value 
 
 and value = 
      | INT of int 
      | UNIT
 
 type env = Ast.var -> value 
+
+
+type binding = var * value
+type store = binding list
 
 val string_of_value : value -> string 
 

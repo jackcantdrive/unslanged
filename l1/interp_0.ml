@@ -17,11 +17,8 @@ open Ast
 let complain = Errors.complain
 
 let verbose = ref false 
-
+type var = string 
 type address = int 
-
-type store = address -> value 
-
 and value = 
      | INT of int 
      | UNIT
@@ -31,6 +28,10 @@ type env = var -> value
 type binding = var * value
 
 type bindings = binding list
+
+
+(* type store = address -> value  *)
+type store = binding list
 
 (* auxiliary functions *) 
 
@@ -62,6 +63,12 @@ let do_oper = function
     interpret : (expr * env * store) -> (value * store) 
               : (expr * (var -> value) * address -> value) -> value
 *) 
+
+let rec find_var var = function
+  | (k,v)::rest when k=var -> v
+  | _::rest -> find_var var rest
+  | [] -> complain (var ^ " is not defined!\n")
+
 let rec interpret (e, env, store) = 
     match e with 
 	| Integer n        -> (INT n, store) 
@@ -76,15 +83,15 @@ let rec interpret (e, env, store) =
     | Seq [e]          -> interpret (e, env, store)
     | Seq (e :: rest)  -> let (_,  store1) = interpret(e, env, store) 
                           in interpret(Seq rest, env, store1) 
-    | Var var -> (INT 7337, store)
+    | Var var -> (find_var var store, store)
     | Assign(var, e) -> let (v1, store1) = interpret(e, env, store) in
-                              (UNIT, store)
+                              (UNIT, (var, v1)::store)
 
 (* env_empty : env *) 
 let empty_env = fun x -> complain (x ^ " is not defined!\n")
 
 (* store_empty : env *) 
-let empty_store = fun x -> complain ((string_of_int x) ^ " is not allocated!\n")
+let empty_store = []
 
 (* interpret_top_level : expr -> value *) 
 let interpret_top_level e = let (v, _) = interpret(e, empty_env, empty_store) in v 
