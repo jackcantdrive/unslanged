@@ -13,6 +13,10 @@ type expr =
        | Var of var
        | Assign of var * expr
        | Para of expr * expr
+       | If of expr * expr * expr
+       | Bool of bool
+       | While of expr * expr
+       | Gteq of expr * expr
 
 and lambda = var * expr 
 
@@ -56,6 +60,10 @@ let rec pp_expr ppf = function
     | Var var          -> fprintf ppf "%s" var
     | Assign (var, e) -> fprintf ppf "begin %s = %a end" var pp_expr e
     | Para(e1, e2)           -> fprintf ppf "%a|%a" pp_expr e1 pp_expr e2
+    | Bool b -> fstring ppf (string_of_bool b)
+    | While (e1, e2) -> fprintf ppf "while %a do %a end" pp_expr e1 pp_expr e2
+    | If (e1, e2, e3) -> fprintf ppf "if %a then %a else %a" pp_expr e1 pp_expr e2 pp_expr e3
+    | Gteq (e1, e2) -> fprintf ppf "%a >= %a" pp_expr e1 pp_expr e2
 	
 and pp_expr_list ppf = function 
   | [] -> () 
@@ -99,6 +107,10 @@ let rec string_of_expr = function
     | Var(var) -> mk_con "Var" [var]
     | Assign(var, e) -> mk_con "Assign" [var; string_of_expr e]
     | Para (e1, e2)           -> mk_con "Para" [string_of_expr e1; string_of_expr e2]
+    | If (e1, e2, e3)           -> mk_con "If" [string_of_expr e1; string_of_expr e2; string_of_expr e3]
+    | While (e1, e2)           -> mk_con "While" [string_of_expr e1; string_of_expr e2]
+    | Gteq (e1, e2)           -> mk_con "Gteq" [string_of_expr e1; string_of_expr e2]
+    | Bool b           -> mk_con "Bool" [string_of_bool b]
 
 and string_of_expr_list = function 
   | [] -> "" 

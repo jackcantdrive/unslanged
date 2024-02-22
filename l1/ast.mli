@@ -13,6 +13,10 @@ type expr =
        | Var of var
        | Assign of var * expr
        | Para of expr * expr
+       | If of expr * expr * expr
+       | Bool of bool
+       | While of expr * expr
+       | Gteq of expr * expr
 
 (* printing *) 
 val string_of_unary_oper : unary_oper -> string 

@@ -30,6 +30,12 @@ rule token = parse
     | ';'	           { SEMICOLON }
     | "begin"        { BEGIN }
     | "end"          { END }
+    | "while"          { WHILE }
+    | "do"          { DO }
+    | "if"          { IF }
+    | "then"          { THEN }
+    | "else"          { ELSE }
+    | ">="          { GTEQ }
     | eof            { EOF }  
     | "|"            { BAR }  
     | int_reg_exp { INT (int_of_string (Lexing.lexeme lexbuf)) }

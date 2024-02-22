@@ -30,6 +30,10 @@ type expr =
   | Var of loc * var
   | Assign of loc * var * expr
   | Para of loc * expr * expr
+  | Bool of loc * bool
+  | While of loc * expr * expr
+  | If of loc * expr * expr * expr
+  | Gteq of loc * expr * expr
 
 
 and lambda = var * type_expr * expr 
@@ -42,6 +46,10 @@ let loc_of_expr = function
     | Var(loc, _) -> loc
     | Assign(loc, _, _) -> loc
     | Para(loc, _, _) -> loc
+    | Bool(loc, _) -> loc
+    | While(loc, _, _) -> loc
+    | If(loc, _, _, _) -> loc
+    | Gteq(loc, _, _) -> loc
 
 
 let string_of_loc loc = 
@@ -139,6 +147,10 @@ let rec string_of_expr = function
     | Var(_, var) -> mk_con "Var" [var]
     | Assign(_, var, e) -> mk_con "Assign" [var; string_of_expr e]
     | Para(_, e1, e2) -> mk_con "Para" [string_of_expr e1; string_of_expr e2]
+    | Bool(_, b) -> mk_con "Bool" [string_of_bool b] 
+    | If(_, e1, e2, e3) -> mk_con "If" [string_of_expr e1; string_of_expr e2; string_of_expr e3]
+    | While(_, e1, e2) -> mk_con "While" [string_of_expr e1; string_of_expr e2]
+    | Gteq(_, e1, e2) -> mk_con "Gteq" [string_of_expr e1; string_of_expr e2]
 
 
 and string_of_expr_list = function 

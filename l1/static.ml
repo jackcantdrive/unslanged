@@ -71,15 +71,34 @@ let make_bop loc bop (e1, t1) (e2, t2) =
 
 let make_assign loc var (e, t) = Assign(loc, var, e), TEunit
 
+let make_if loc (e1, t1) (e2, t2) (e3, t3) = 
+  match t1 with
+  | TEbool when t2 = t3 -> If (loc, e1, e2, e3), t2
+  | TEbool -> report_type_mismatch (e2, t2) (e3, t3)
+  | _ -> report_expecting e1 "bool" t1
+
+let make_gteq loc (e1, t1) (e2, t2) =
+  if t1 = t2 then (Gteq (loc, e1, e2)), TEbool
+  else report_type_mismatch (e1, t2) (e2, t2)
+
+let make_while loc (e1, t1) (e2, t2) =
+  match t1 with
+  | TEbool -> While (loc, e1, e2), t2
+  | _ -> report_expecting e1 "bool" t1
+
 let rec infer env e = 
     match e with 
     | Integer _            -> (e, TEint)
+    | Bool _ -> (e, TEbool)
     | UnaryOp(loc, uop, e) -> make_uop loc uop (infer env e) 
     | Op(loc, e1, bop, e2) -> make_bop loc bop (infer env e1) (infer env e2) 
     | Seq(loc, el)         -> infer_seq loc env el
     | Var(loc, var) -> e, TEint (* find loc var env *)
     | Assign(loc, var, e) -> make_assign loc var (infer env e)
     | Para(loc, e1, e2) -> Para(loc, e1, e2), TEunit
+    | If(loc, e1, e2, e3) -> make_if loc (infer env e1) (infer env e2) (infer env e3)
+    | Gteq(loc, e1, e2) -> make_gteq loc (infer env e1) (infer env e2)
+    | While(loc, e1, e2) -> make_while loc (infer env e1) (infer env e2)
 
 and infer_seq loc env el = 
     let rec aux carry = function 

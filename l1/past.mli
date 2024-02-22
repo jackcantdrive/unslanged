@@ -26,6 +26,10 @@ type expr =
     | Var of loc * var
     | Assign of loc * var * expr
     | Para of loc * expr * expr
+    | Bool of loc * bool
+    | While of loc * expr * expr
+    | If of loc * expr * expr * expr
+    | Gteq of loc * expr * expr
 
 val loc_of_expr : expr -> loc 
 val string_of_loc : loc -> string 
