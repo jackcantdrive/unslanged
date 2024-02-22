@@ -8,14 +8,15 @@ let get_loc = Parsing.symbol_start_pos
 
 %token <int> INT
 %token<string> IDENT
-%token EQUAL
-%token ADD SUB MUL DIV SEMICOLON FIB MOD GTEQ
+%token EQUAL GTEQ
+%token ADD SUB MUL DIV SEMICOLON FIB MOD
 %token LPAREN RPAREN
 %token BEGIN END IF DO THEN ELSE WHILE
 %token EOF
 %token BAR
 %left BAR
 %left EQUAL
+%left GTEQ
 %left ADD SUB        /* lowest precedence */
 %left MUL DIV MOD         /* medium precedence */
 %nonassoc UMINUS FIB        /* highest precedence */

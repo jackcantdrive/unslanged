@@ -2,7 +2,7 @@ begin
     n = 10;
     a = 0;
     b = 1;
-    while n >= 0 do
+    while n >= 1 do
         n = n-1 | a = b | b = a + b
     end;
     a
