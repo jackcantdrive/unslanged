@@ -97,6 +97,10 @@ let rec interpret (e, env, store) =
                         let (v2, store2) = interpret(e2, env, store) in
                         let num_new = List.length store2 - List.length store in 
                         (UNIT, take num_new store2 @ store1)
+    | If(e1, e2, e3) -> let (v1, store1) = interpret (e1, env, store) in match (v1) with
+                  | BOOL true -> interpret (e2, env, store1)
+                  | BOOL false -> interpret (e3, env, store1)
+                  | _ -> complain ("expected BOOL")
 
 (* env_empty : env *) 
 let empty_env = fun x -> complain (x ^ " is not defined!\n")
