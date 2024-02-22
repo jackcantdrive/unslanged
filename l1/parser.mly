@@ -14,6 +14,7 @@ let get_loc = Parsing.symbol_start_pos
 %token BEGIN END IF DO THEN ELSE WHILE
 %token EOF
 %token BAR
+%right SEMICOLON
 %left BAR
 %left EQUAL
 %left GTEQ
@@ -48,7 +49,7 @@ expr:
 | expr DIV expr                      { Past.Op(get_loc(), $1, Past.DIV, $3) }
 | expr MOD expr                      { Past.Op(get_loc(), $1, Past.MOD, $3) }
 | expr GTEQ expr                     { Past.Op(get_loc(), $1, Past.GTEQ, $3) }
-| BEGIN exprlist END                 { Past.Seq(get_loc(), $2) }
+| exprlist                           { Past.Seq(get_loc(), $1) }
 | IDENT EQUAL expr { Past.Assign(get_loc(), $1, $3) }
 | expr BAR expr { Past.Para(get_loc(), $1, $3) }
 | WHILE expr DO expr END { Past.While(get_loc(), $2, $4) }
@@ -56,7 +57,7 @@ expr:
 | DEC IDENT { Past.Dec(get_loc(), $2) }
 
 exprlist:
-|   expr                             { [$1] }
-|   expr  SEMICOLON exprlist         { $1 :: $3  }
+| expr SEMICOLON exprlist   { $1 :: $3 }
+| expr SEMICOLON expr       { $1 :: $3 :: [] }
 
 
