@@ -33,6 +33,7 @@ type expr =
   | Bool of loc * bool
   | While of loc * expr * expr
   | If of loc * expr * expr * expr
+  | Dec of loc * var
 
 
 and lambda = var * type_expr * expr 
@@ -48,6 +49,7 @@ let loc_of_expr = function
     | Bool(loc, _) -> loc
     | While(loc, _, _) -> loc
     | If(loc, _, _, _) -> loc
+    | Dec(loc, _) -> loc
 
 
 let string_of_loc loc = 
@@ -150,6 +152,7 @@ let rec string_of_expr = function
     | Bool(_, b) -> mk_con "Bool" [string_of_bool b] 
     | If(_, e1, e2, e3) -> mk_con "If" [string_of_expr e1; string_of_expr e2; string_of_expr e3]
     | While(_, e1, e2) -> mk_con "While" [string_of_expr e1; string_of_expr e2]
+    | Dec(_, var) -> mk_con "Dec" [var]
 
 
 and string_of_expr_list = function 

@@ -98,6 +98,7 @@ let rec infer env e =
     | Para(loc, e1, e2) -> Para(loc, e1, e2), TEunit
     | If(loc, e1, e2, e3) -> make_if loc (infer env e1) (infer env e2) (infer env e3)
     | While(loc, e1, e2) -> make_while loc (infer env e1) (infer env e2)
+    | Dec(loc, var) -> e, TEint
 
 and infer_seq loc env el = 
     let rec aux carry = function 

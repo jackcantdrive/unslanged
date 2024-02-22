@@ -29,6 +29,7 @@ type expr =
     | Bool of loc * bool
     | While of loc * expr * expr
     | If of loc * expr * expr * expr
+    | Dec of loc * var
 
 val loc_of_expr : expr -> loc 
 val string_of_loc : loc -> string 

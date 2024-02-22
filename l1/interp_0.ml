@@ -105,6 +105,9 @@ let rec interpret (e, env, store) =
                   | BOOL true -> (interpret (Seq ([e2; While (e1, e2)]), env, store1))
                   | BOOL false -> UNIT, store1
                   | _ -> complain ("expected BOOL"))
+    | Dec var -> match (find_var var store) with
+                  | INT n -> UNIT, (var, INT (n-1))::store
+                  | _ -> complain ("expected INT")
 
 (* env_empty : env *) 
 let empty_env = fun x -> complain (x ^ " is not defined!\n")

@@ -8,7 +8,7 @@ let get_loc = Parsing.symbol_start_pos
 
 %token <int> INT
 %token<string> IDENT
-%token EQUAL GTEQ
+%token EQUAL GTEQ DEC
 %token ADD SUB MUL DIV SEMICOLON FIB MOD
 %token LPAREN RPAREN
 %token BEGIN END IF DO THEN ELSE WHILE
@@ -19,7 +19,7 @@ let get_loc = Parsing.symbol_start_pos
 %left GTEQ
 %left ADD SUB        /* lowest precedence */
 %left MUL DIV MOD         /* medium precedence */
-%nonassoc UMINUS FIB        /* highest precedence */
+%nonassoc UMINUS FIB DEC        /* highest precedence */
 %nonassoc IDENT
 
 
@@ -53,6 +53,7 @@ expr:
 | expr BAR expr { Past.Para(get_loc(), $1, $3) }
 | WHILE expr DO expr END { Past.While(get_loc(), $2, $4) }
 | IF expr THEN expr ELSE expr { Past.If(get_loc(), $2, $4, $6) }
+| IDENT DEC { Past.Dec(get_loc(), $1) }
 
 exprlist:
 |   expr                             { [$1] }

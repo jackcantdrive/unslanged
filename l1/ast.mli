@@ -16,6 +16,7 @@ type expr =
        | If of expr * expr * expr
        | Bool of bool
        | While of expr * expr
+       | Dec of var
 
 (* printing *) 
 val string_of_unary_oper : unary_oper -> string 
