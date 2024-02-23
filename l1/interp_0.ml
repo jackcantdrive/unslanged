@@ -77,17 +77,21 @@ let rec take n list = match (n, list) with
   | n, hd::rest -> hd::take (n-1) rest
 
 let rec interpret (e, env, store) = 
-    match e with 
-	| Integer n        -> (INT n, store) 
+  match e with
+    | Integer n        -> (INT n, store)
+    | Bool b -> (BOOL b, store)
     | Op(e1, op, e2)   -> let (v1, store1) = interpret(e1, env, store) in 
                           let (v2, store2) = interpret(e2, env, store1) in (do_oper(op, v1, v2), store2)
     | UnaryOp(FIB, Integer n) when n < 2 -> (INT n, store)
     | UnaryOp(FIB, Integer n) -> let (v1, store1) = interpret(UnaryOp(FIB, Integer (n-1)), env, store) in 
           let (v2, store2) = interpret(UnaryOp(FIB, Integer (n-2)), env, store1) in (do_oper(ADD, v1, v2), store2)
     | UnaryOp(FIB, e)   -> let (v, store1) = interpret(e, env, store) in (match v with
-      | INT n -> interpret(UnaryOp(FIB, Integer n), env, store1))
+                  | INT n -> interpret(UnaryOp(FIB, Integer n), env, store1)
+                  | UNIT -> complain ("expected INT")
+                  | BOOL _ -> complain ("expected INT"))
     | UnaryOp(uop, e)   -> let (v, store1) = interpret(e, env, store) in (do_unary(uop, v), store1) 
     | Seq [e]          -> interpret (e, env, store)
+    | Seq []           -> complain ("empty seq")
     | Seq (e :: rest)  -> let (_,  store1) = interpret(e, env, store) 
                           in interpret(Seq rest, env, store1) 
     | Var var -> (find_var var store, store)

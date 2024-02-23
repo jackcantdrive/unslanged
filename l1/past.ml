@@ -100,7 +100,14 @@ let rec pp_expr ppf = function
     | Op(_, e1, op, e2)   -> fprintf ppf "(%a %a %a)" pp_expr e1  pp_binary op pp_expr e2 
     | Seq (_, [])         -> () 
     | Seq (_, [e])        -> pp_expr ppf e 
-    | Seq (l, e :: rest)  -> fprintf ppf "%a; %a" pp_expr e pp_expr (Seq(l, rest))	
+    | Seq (l, e :: rest)  -> fprintf ppf "%a; %a" pp_expr e pp_expr (Seq(l, rest))
+    | Var (_, var) -> fstring ppf (var)
+    | Assign (_, var, e) -> fprintf ppf "%s = %a" var pp_expr e
+    | Para (l, e1, e2) -> fprintf ppf "%a | %a" pp_expr e1 pp_expr e2
+    | Bool (_, b) -> fstring ppf (string_of_bool b)
+    | While (_, e1, e2) -> fprintf ppf "while %a do %a end" pp_expr e1 pp_expr e2
+    | If (_, e1, e2, e3) -> fprintf ppf "if %a then %a else %a" pp_expr e1 pp_expr e2 pp_expr e3
+    | Dec (_, var) -> fprintf ppf "--%s" var
 
 let print_expr e = 
     let _ = pp_expr std_formatter e
