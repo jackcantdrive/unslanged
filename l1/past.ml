@@ -34,6 +34,7 @@ type expr =
   | While of loc * expr * expr
   | If of loc * expr * expr * expr
   | Dec of loc * var
+  | Unit of loc
 
 
 and lambda = var * type_expr * expr 
@@ -50,6 +51,7 @@ let loc_of_expr = function
     | While(loc, _, _) -> loc
     | If(loc, _, _, _) -> loc
     | Dec(loc, _) -> loc
+    | Unit loc -> loc
 
 
 let string_of_loc loc = 
@@ -160,6 +162,7 @@ let rec string_of_expr = function
     | If(_, e1, e2, e3) -> mk_con "If" [string_of_expr e1; string_of_expr e2; string_of_expr e3]
     | While(_, e1, e2) -> mk_con "While" [string_of_expr e1; string_of_expr e2]
     | Dec(_, var) -> mk_con "Dec" [var]
+    | Unit _ -> mk_con "Unit" []
 
 
 and string_of_expr_list = function 

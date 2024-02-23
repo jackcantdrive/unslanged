@@ -39,6 +39,7 @@ rule token = parse
     | eof            { EOF }  
     | "|"            { BAR }  
     | "--"           { DEC }  
+    | "()"           { UNIT }  
     | int_reg_exp { INT (int_of_string (Lexing.lexeme lexbuf)) }
     | ident_reg_exp { IDENT (Lexing.lexeme lexbuf) }
     | "="            { EQUAL }

@@ -30,6 +30,7 @@ type expr =
     | While of loc * expr * expr
     | If of loc * expr * expr * expr
     | Dec of loc * var
+    | Unit of loc
 
 val loc_of_expr : expr -> loc 
 val string_of_loc : loc -> string 

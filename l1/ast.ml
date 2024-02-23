@@ -17,6 +17,7 @@ type expr =
        | Bool of bool
        | While of expr * expr
        | Dec of var
+       | Unit
 
 and lambda = var * expr 
 
@@ -115,6 +116,7 @@ let rec string_of_expr = function
     | While (e1, e2)           -> mk_con "While" [string_of_expr e1; string_of_expr e2]
     | Bool b           -> mk_con "Bool" [string_of_bool b]
     | Dec var -> mk_con "Dec" [var]
+    | Unit -> mk_con "Unit" []
 
 and string_of_expr_list = function 
   | [] -> "" 

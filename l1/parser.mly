@@ -8,6 +8,7 @@ let get_loc = Parsing.symbol_start_pos
 
 %token <int> INT
 %token<string> IDENT
+%token UNIT
 %token EQUAL GTEQ DEC
 %token ADD SUB MUL DIV SEMICOLON FIB MOD
 %token LPAREN RPAREN
@@ -36,6 +37,7 @@ main:
 ;
 simple_expr:
 | INT                                { Past.Integer (get_loc(), $1) }
+| UNIT                                { Past.Unit (get_loc()) }
 | IDENT                              { Past.Var (get_loc(), $1) }
 | LPAREN expr RPAREN                 { $2 }
 
