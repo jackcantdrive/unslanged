@@ -21,6 +21,8 @@ type address = int
 
 type value = 
      | INT of int 
+     | BOOL of bool
+     | UNIT
 
 and closure = var * expr * env 
 
@@ -29,6 +31,8 @@ and continuation_action =
   | OPER of oper * value 
   | OPER_FST of Ast.expr * env * Ast.oper 
   | TAIL of Ast.expr list * env
+  | IF of Ast.expr * Ast.expr * env
+  | WHILE of Ast.expr * Ast.expr * env
 
 and continuation = continuation_action  list
 
@@ -70,6 +74,7 @@ let do_oper = function
   | (MUL,  INT m,   INT n)  -> INT (m * n)
   | (DIV,  INT m,   INT n)  -> INT (m / n)
   | (MOD,  INT m,   INT n)  -> INT (m mod n)
+  | (GTEQ,  INT m,   INT n)  -> BOOL (m >= n)
   | (op, _, _)  -> complain ("malformed binary operator: " ^ (string_of_oper op))
 
 
@@ -83,6 +88,8 @@ let string_of_list sep f l =
 
 let rec string_of_value = function 
      | INT n          -> string_of_int n 
+     | BOOL b -> string_of_bool b
+     | UNIT -> "()"
 
 and string_of_closure (x, e, env) = x ^ ", " ^ (Ast.string_of_expr e) ^  ", " ^ (string_of_env env)
 
@@ -98,6 +105,9 @@ let string_of_continuation_action = function
   | OPER_FST(e, env, op) ->  
       "OPER_FST(" ^ (Ast.string_of_expr e) ^ ", " ^ (string_of_env env) ^ ", " ^ (string_of_oper op) ^ ")"
   | TAIL (el , env) -> "TAIL("  ^ (string_of_expr_list el)   ^ ", " ^ (string_of_env env) ^ ")"
+  | IF (e1, e2, env) -> "IF( then"  ^ (string_of_expr e1) ^ " else " ^ (string_of_expr e2)  ^ ", " ^ (string_of_env env) ^ ")"
+  | WHILE (e1, e2, env) -> "WHILE("  ^ (string_of_expr e1) ^ " do " ^ (string_of_expr e2)  ^ ", " ^ (string_of_env env) ^ ")"
+
 
 let string_of_continuation = string_of_list ";\n " string_of_continuation_action
 
@@ -134,7 +144,19 @@ let step = function
  (* COMPUTE --> EXAMINE *) 
  | COMPUTE(OPER_FST (e2, env, op) :: k,         v1)  -> EXAMINE(e2, env, OPER (op, v1) :: k)
  | COMPUTE((TAIL (el, env)) :: k,     _)  ->  EXAMINE(Seq el, env, k) 
+ | EXAMINE(If (e1, e2, e3), env, k) -> EXAMINE(e1, env, IF(e2, e3, env) :: k)
+ | COMPUTE(IF (e2, e3, env) :: k, BOOL true) -> EXAMINE(e2, env, k)
+ | COMPUTE(IF (e2, e3, env) :: k, BOOL false) -> EXAMINE(e3, env, k)
+
+ | EXAMINE(While (e1, e2), env, k) -> EXAMINE(e1, env, WHILE(e1, e2, env) :: k)
+
+ (* | COMPUTE(WHILE(e1, e2, env) :: k, BOOL true) -> EXAMINE(e2, env, WHILE(e1, e2, env) :: k) *)
+ | COMPUTE(WHILE(e1, e2, env) :: k, BOOL true) -> EXAMINE(Seq(e2::e1::[]), env, WHILE(e1, e2, env) :: k)
+ (* | COMPUTE(WHILE(e1, e2, env) :: k, BOOL true) -> EXAMINE(Seq(e2::While(e1, e2)::[]), env, k) *)
+ | COMPUTE(WHILE(e1, e2, env) :: k, BOOL false) -> COMPUTE(k, UNIT)
+
  | state -> complain ("step : malformed state = " ^ (string_of_state state) ^ "\n")
+
 
 let rec driver n state = 
   let _ = if Option.verbose 
