@@ -1,0 +1,6 @@
+n = 10;
+r = 1;
+while --n >= 1 do
+    r = r * n
+end;
+r
