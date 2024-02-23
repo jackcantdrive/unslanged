@@ -91,7 +91,7 @@ let rec interpret (e, env, store) =
                   | BOOL _ -> complain ("expected INT"))
     | UnaryOp(uop, e)   -> let (v, store1) = interpret(e, env, store) in (do_unary(uop, v), store1) 
     | Seq [e]          -> interpret (e, env, store)
-    | Seq []           -> complain ("empty seq")
+    | Seq []           -> UNIT, store
     | Seq (e :: rest)  -> let (_,  store1) = interpret(e, env, store) 
                           in interpret(Seq rest, env, store1) 
     | Var var -> (find_var var store, store)

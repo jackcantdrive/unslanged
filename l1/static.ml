@@ -102,7 +102,7 @@ let rec infer env e =
 
 and infer_seq loc env el = 
     let rec aux carry = function 
-      | []        -> internal_error "empty sequence found in parsed AST" 
+      | []        -> Seq (loc, []), TEunit
       | [e]       -> let (e', t) = infer env e in (Seq(loc, List.rev (e' :: carry )), t)
       | e :: rest -> let (e', _) = infer env e in aux (e' :: carry) rest 
     in aux [] el 
