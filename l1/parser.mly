@@ -53,7 +53,7 @@ expr:
 | IDENT EQUAL expr { Past.Assign(get_loc(), $1, $3) }
 | expr BAR expr { Past.Para(get_loc(), $1, $3) }
 | WHILE expr DO expr END { Past.While(get_loc(), $2, $4) }
-| IF expr THEN expr ELSE expr { Past.If(get_loc(), $2, $4, $6) }
+| IF expr THEN expr ELSE expr END { Past.If(get_loc(), $2, $4, $6) }
 | DEC IDENT { Past.Dec(get_loc(), $2) }
 
 exprlist:
