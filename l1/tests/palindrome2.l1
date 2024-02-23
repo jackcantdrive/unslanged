@@ -1,0 +1,32 @@
+n = 8001108;
+i = 0;
+l = 0;
+p = 1;
+q = 1;
+
+(* l = ceil(log10(n)) *)
+while n >= p do
+    p = p * 10;
+    l = l + 1
+end;
+--l;
+p = p / 10;
+
+l = 0;
+r = 0;
+i = 0;
+exit = 0;
+isPalindrome = 0;
+while exit >= (l-r)*(l-r) do
+    i = i + 1;
+    l = (n / p) % 10;
+    r = (n / q) % 10;
+    if q >= p then
+        isPalindrome = 1;
+        exit = 0-1
+    end;
+    p = p / 10;
+    q = q * 10;
+    if 0 >= p then exit = 0-1 end
+end;
+i; isPalindrome >= 1
