@@ -154,6 +154,8 @@ let step = function
  | COMPUTE(WHILE(e1, e2, env) :: k, BOOL true) -> EXAMINE(Seq(e2::e1::[]), env, WHILE(e1, e2, env) :: k)
  (* | COMPUTE(WHILE(e1, e2, env) :: k, BOOL true) -> EXAMINE(Seq(e2::While(e1, e2)::[]), env, k) *)
  | COMPUTE(WHILE(e1, e2, env) :: k, BOOL false) -> COMPUTE(k, UNIT)
+ | EXAMINE(Unit, _, k) -> COMPUTE(k, UNIT) 
+
 
  | state -> complain ("step : malformed state = " ^ (string_of_state state) ^ "\n")
 
