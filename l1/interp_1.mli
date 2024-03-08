@@ -15,6 +15,7 @@ and continuation_action =
   | TAIL of Ast.expr list * env
   | IF of Ast.expr * Ast.expr * env
   | WHILE of Ast.expr * Ast.expr * env
+  | ASSIGN of Ast.var * env
 
 and continuation = continuation_action  list
 

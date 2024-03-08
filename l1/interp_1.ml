@@ -33,6 +33,7 @@ and continuation_action =
   | TAIL of Ast.expr list * env
   | IF of Ast.expr * Ast.expr * env
   | WHILE of Ast.expr * Ast.expr * env
+  | ASSIGN of Ast.var * env
 
 and continuation = continuation_action  list
 
@@ -107,6 +108,7 @@ let string_of_continuation_action = function
   | TAIL (el , env) -> "TAIL("  ^ (string_of_expr_list el)   ^ ", " ^ (string_of_env env) ^ ")"
   | IF (e1, e2, env) -> "IF( then"  ^ (string_of_expr e1) ^ " else " ^ (string_of_expr e2)  ^ ", " ^ (string_of_env env) ^ ")"
   | WHILE (e1, e2, env) -> "WHILE("  ^ (string_of_expr e1) ^ " do " ^ (string_of_expr e2)  ^ ", " ^ (string_of_env env) ^ ")"
+  | ASSIGN (var, env) -> "ASSIGN("  ^ var ^ " = , " ^ (string_of_env env) ^ ")"
 
 
 let string_of_continuation = string_of_list ";\n " string_of_continuation_action
@@ -129,7 +131,30 @@ let new_address () = let a = !next_address in (next_address := a + 1; a)
 
 let do_assign a v = (heap.(a) <- v)
 
- 
+(* let rec find_var var = function
+  | (k,v)::rest when k=var -> v
+  | _::rest -> find_var var rest
+  | [] -> complain (var ^ " is not defined!\n") *)
+
+module StringMap = Map.Make(String)
+
+(* Define a mutable map *)
+let mutable_map = ref StringMap.empty
+
+(* Function to add/update a key-value pair in the map *)
+let add_to_map key value =
+  mutable_map := StringMap.add key value !mutable_map
+
+(* Function to retrieve a value from the map *)
+let get_from_map key =
+  StringMap.find_opt key !mutable_map
+
+let find_var var = match (get_from_map var) with
+  | Some value -> value
+  | None -> complain (var ^ " is not defined!\n")
+
+let assign_var var value = add_to_map var value
+
 let step = function 
  (* EXAMINE --> EXAMINE *) 
  | EXAMINE(UnaryOp(op, e),              env, k) -> EXAMINE(e,  env, (UNARY op) :: k)
@@ -144,6 +169,7 @@ let step = function
  (* COMPUTE --> EXAMINE *) 
  | COMPUTE(OPER_FST (e2, env, op) :: k,         v1)  -> EXAMINE(e2, env, OPER (op, v1) :: k)
  | COMPUTE((TAIL (el, env)) :: k,     _)  ->  EXAMINE(Seq el, env, k) 
+
  | EXAMINE(If (e1, e2, e3), env, k) -> EXAMINE(e1, env, IF(e2, e3, env) :: k)
  | COMPUTE(IF (e2, e3, env) :: k, BOOL true) -> EXAMINE(e2, env, k)
  | COMPUTE(IF (e2, e3, env) :: k, BOOL false) -> EXAMINE(e3, env, k)
@@ -155,6 +181,15 @@ let step = function
  (* | COMPUTE(WHILE(e1, e2, env) :: k, BOOL true) -> EXAMINE(Seq(e2::While(e1, e2)::[]), env, k) *)
  | COMPUTE(WHILE(e1, e2, env) :: k, BOOL false) -> COMPUTE(k, UNIT)
  | EXAMINE(Unit, _, k) -> COMPUTE(k, UNIT) 
+ (* | EXAMINE(Var var, env, k) -> COMPUTE (k, find_var var env) *)
+ | EXAMINE(Var var, env, k) -> COMPUTE (k, find_var var)
+ | EXAMINE(Assign (var, e), env, k) -> EXAMINE (e, env, ASSIGN (var, env) :: k)
+ (* | COMPUTE(ASSIGN (var, env) :: k, v) -> print_endline (string_of_state (COMPUTE(ASSIGN (var, env) :: k, v))) ; COMPUTE (k, UNIT) *)
+
+ (* | COMPUTE(ASSIGN (var, env) :: k, v) -> EXAMINE(UNIT, (var, v)::env, k) *)
+ (* | COMPUTE(ASSIGN (var, env) :: k, v) -> env; COMPUTE(k, UNIT) *)
+ | COMPUTE(ASSIGN (var, env) :: k, v) -> assign_var var v; COMPUTE(k, UNIT)
+
 
 
  | state -> complain ("step : malformed state = " ^ (string_of_state state) ^ "\n")
